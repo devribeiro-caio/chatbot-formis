@@ -304,9 +304,10 @@ function getApiUrl() {
     : '/api/chat';
 }
 
-// Função que processa e envia uma mensagem de texto para o backend
-async function enviarMensagemTexto(texto) {
-  // Reinicia o timer de inatividade a cada mensagem enviada
+    // Função que processa e envia uma mensagem de texto para o backend
+   async function enviarMensagemTexto(texto) {
+  
+    // Reinicia o timer de inatividade a cada mensagem enviada
   resetarTimerInatividade();
 
   adicionarMensagem(texto, 'user');

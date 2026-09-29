@@ -1,3 +1,7 @@
+// Importa o módulo DNS para configurar servidores DNS
+const dns = require('dns');
+dns.setServers(['8.8.8.8', '8.8.4.4']);
+
 // Importa o Express, framework que gerencia as rotas e requisições HTTP
 const express = require('express');
 
