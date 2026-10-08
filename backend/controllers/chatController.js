@@ -4,6 +4,10 @@ const { enviarMensagem } = require('../services/groqService');
 // Importa os modelos do MongoDB
 const Conversa = require('../models/conversa');
 const Avaliacao = require('../models/avaliacao');
+const {
+  obterRespostaCatalogo,
+  obterRespostaDetectorPorQuantidade
+} = require('../services/catalogoService');
 
 // Função principal que processa as mensagens recebidas do frontend
 async function processarMensagem(req, res) {
@@ -14,21 +18,26 @@ async function processarMensagem(req, res) {
       return res.status(400).json({ error: 'Histórico de mensagens é obrigatório.' });
     }
 
-    // Envia o histórico para o serviço da Groq e aguarda a resposta
-    const resultado = await enviarMensagem(historico);
+    // Pedidos de catálogo e perguntas sobre detectores de 4/8 gases usam dados locais confiáveis.
+    let resposta = obterRespostaCatalogo(historico)
+      || obterRespostaDetectorPorQuantidade(historico);
 
-    // Se o resultado já vier parseado como objeto, usa direto
-    // Se vier como string, tenta parsear
-    let resposta;
-    if (typeof resultado === 'object') {
-      resposta = resultado;
-    } else {
-      try {
-        const limpo = resultado.replace(/```json|```/g, '').trim();
-        resposta = JSON.parse(limpo);
-      } catch {
-        // Se não conseguir parsear, retorna texto puro sem cards
-        resposta = { texto: resultado, cards: [] };
+    if (!resposta) {
+      // Envia o histórico para o serviço da Groq e aguarda a resposta
+      const resultado = await enviarMensagem(historico);
+
+      // Se o resultado já vier parseado como objeto, usa direto
+      // Se vier como string, tenta parsear
+      if (typeof resultado === 'object') {
+        resposta = resultado;
+      } else {
+        try {
+          const limpo = resultado.replace(/```json|```/g, '').trim();
+          resposta = JSON.parse(limpo);
+        } catch {
+          // Se não conseguir parsear, retorna texto puro sem cards
+          resposta = { texto: resultado, cards: [] };
+        }
       }
     }
 

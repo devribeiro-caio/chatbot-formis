@@ -1,7 +1,3 @@
-// Importa o módulo DNS para configurar servidores DNS
-const dns = require('dns');
-dns.setServers(['8.8.8.8', '8.8.4.4']);
-
 // Importa o Express, framework que gerencia as rotas e requisições HTTP
 const express = require('express');
 
@@ -12,7 +8,9 @@ const cors = require('cors');
 const path = require('path');
 
 // Importa o dotenv para carregar as variáveis de ambiente do arquivo .env
-require('dotenv').config({ path: path.join(__dirname, '.env') });
+require('dotenv').config({
+  path: [path.resolve(__dirname, '..', '.env'), path.resolve(__dirname, '.env')]
+});
 
 // Importa a função de conexão com o MongoDB Atlas
 const conectarBanco = require('./config/db');

@@ -22,4 +22,4 @@ console.log('Iniciando backend e frontend...');
 start('npm', ['start'], 'backend');
 
 // Usa npx para garantir que o binário 'serve' seja executado mesmo sem instalação global
-start('npx', ['serve', 'frontend', '-l', '3002'], 'frontend');
+start('npx', ['serve', 'frontend', '-l', '5500'], 'frontend');
