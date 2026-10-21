@@ -290,18 +290,7 @@ function extrairJSON(texto) {
 
 // Retorna a URL da API (baseado no ambiente - desenvolvimento ou produção)
 function getApiUrl() {
-  const configurado = window.FORMIS_API_URL || window.__FORMIS_API_URL__;
-
-  if (typeof configurado === 'string' && configurado.trim()) {
-    const baseUrl = configurado.trim().replace(/\/$/, '');
-    return baseUrl.endsWith('/api/chat')
-      ? baseUrl
-      : `${baseUrl}/api/chat`;
-  }
-
-  return window.location.protocol === 'file:'
-    ? 'http://localhost:3002/api/chat'
-    : '/api/chat';
+  return 'https://chatbot-formis.onrender.com/api/chat';
 }
 
     // Função que processa e envia uma mensagem de texto para o backend
@@ -322,31 +311,11 @@ function getApiUrl() {
       conversaId 
     };
 
-    let resposta;
-    try {
-      resposta = await fetch(primaryUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-    } catch (err) {
-      // Se houve erro de rede, tenta fallback na porta 3002
-      const host = window.location.hostname;
-      const fallbackUrl = `http://${host}:3002/api/chat`;
-      if (!primaryUrl.includes(':3002')) {
-        try {
-          resposta = await fetch(fallbackUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-          });
-        } catch (err2) {
-          throw err2;
-        }
-      } else {
-        throw err;
-      }
-    }
+    const resposta = await fetch(getApiUrl(), {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify(payload)
+});
 
     // Se retornou uma resposta inválida (404 etc), tenta fallback também
     if (!resposta.ok && (resposta.status === 404 || resposta.status === 0)) {

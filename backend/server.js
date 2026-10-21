@@ -22,7 +22,14 @@ const chatRoutes = require('./routes/chatRoutes');
 const app = express();
 
 // Habilita o CORS para aceitar requisições do site da Formis
-app.use(cors());
+const allowedOrigins = [
+  'https://www.formis.com.br',
+  'https://formis.com.br'
+];
+
+app.use(cors({
+  origin: allowedOrigins
+}));
 
 // Habilita o Express a entender JSON no corpo das requisições
 app.use(express.json());
@@ -35,9 +42,9 @@ const PORT = process.env.PORT || 3002;
 
 async function startServer() {
   await conectarBanco();
-  return app.listen(PORT, () => {
-    console.log(`Servidor rodando na porta ${PORT}`);
-  });
+return app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
+});
 }
 
 if (require.main === module) {
