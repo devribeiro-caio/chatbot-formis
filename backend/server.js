@@ -21,6 +21,14 @@ const chatRoutes = require('./routes/chatRoutes');
 // Cria a aplicação Express
 const app = express();
 
+app.use(cors({
+  origin: true,
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+app.use(express.json());
+
 // Habilita o CORS para aceitar requisições do site da Formis
 const allowedOrigins = [
   'https://www.formis.com.br',
