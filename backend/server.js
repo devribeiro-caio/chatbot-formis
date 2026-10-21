@@ -36,7 +36,13 @@ const allowedOrigins = [
 ];
 
 app.use(cors({
-  origin: allowedOrigins
+  origin: [
+    'http://localhost:5500',
+    'http://127.0.0.1:5500',
+    'http://169.254.113.251:5500'
+  ],
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 // Habilita o Express a entender JSON no corpo das requisições
